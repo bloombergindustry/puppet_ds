@@ -23,7 +23,7 @@ module Puppet::Util::PuppetDs
     end
 
     def config
-      path = '/rbac-api/v1/ds'
+      path = '/rbac-api/v2/ldap'
       context.debug("Executing GET #{path} to #{@connection.url_prefix}")
       result = @connection.get(path)
 
@@ -32,10 +32,20 @@ module Puppet::Util::PuppetDs
       raise StandardError, format_error(result)
     end
 
-    def config=(conf)
-      path = '/rbac-api/v1/ds'
-      context.debug("Executing PUT #{path} to #{@connection.url_prefix}")
-      result = @connection.put(path, conf.to_json)
+    def create=(conf)
+      path = '/rbac-api/v1/command/ldap/create'
+      context.debug("Executing POST #{path} to #{@connection.url_prefix}")
+      result = @connection.post(path, conf.to_json)
+
+      return true if result.success?
+
+      raise StandardError, format_error(result)
+    end
+
+    def update=(conf)
+      path = '/rbac-api/v1/command/ldap/update'
+      context.debug("Executing POST #{path} to #{@connection.url_prefix}")
+      result = @connection.post(path, conf.to_json)
 
       return true if result.success?
 
@@ -43,9 +53,9 @@ module Puppet::Util::PuppetDs
     end
 
     def validate(conf)
-      path = '/rbac-api/v1/ds/test'
-      context.debug("Executing PUT #{path} to #{@connection.url_prefix}")
-      result = @connection.put(path, conf.to_json)
+      path = '/rbac-api/v1/command/ldap/test'
+      context.debug("Executing POST #{path} to #{@connection.url_prefix}")
+      result = @connection.post(path, conf.to_json)
 
       return true if result.success?
 

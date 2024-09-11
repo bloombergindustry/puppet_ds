@@ -5,8 +5,11 @@ require 'puppet/util/puppet_ds/connection'
 class Puppet::Provider::PuppetDs::PuppetDs < Puppet::ResourceApi::SimpleProvider
   def get(context)
     connection     = Puppet::Util::PuppetDs::Connection.new(context)
-    current_config = connection.config
-    return [] if current_config.empty?
+    full_config = connection.config
+    return [] if full_config.empty?
+
+    # TODO: v2 returns array of hashes, support only one config for now
+    current_config = full_config[0]
 
     current_config['ensure'] = 'present'
     current_config['name']   = connection.url
@@ -25,16 +28,22 @@ class Puppet::Provider::PuppetDs::PuppetDs < Puppet::ResourceApi::SimpleProvider
       connection.validate(data)
     end
 
-    connection.config = data # rubocop:disable Lint/UselessSetterCall
+    connection.create = data # rubocop:disable Lint/UselessSetterCall
   end
 
   def update(context, name, should)
-    create(context, name, should)
+# TODO: fix it
+    # connection = Puppet::Util::PuppetDs::Connection.new(context)
+    # data       = sanitize_should(should)
+
+    # connection.validate(data)
+
+    # connection.update = data # rubocop:disable Lint/UselessSetterCall
   end
 
   def delete(context, _name)
     connection = Puppet::Util::PuppetDs::Connection.new(context)
-    connection.config = {} # rubocop:disable Lint/UselessSetterCall
+    connection.update = {} # rubocop:disable Lint/UselessSetterCall
   end
 
   private

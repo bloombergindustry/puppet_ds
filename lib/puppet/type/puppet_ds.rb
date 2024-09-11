@@ -165,6 +165,18 @@ EOS
       type: 'Optional[String]',
       desc: 'The user RDN that you set here is concatenated with the base DN to form the search base when looking up a user. For example, if you specify ou=users for the user RDN, and your base DN setting is ou=Puppet,dc=example,dc=com, PE finds users that have ou=users,ou=Puppet,dc=example,dc=com in their DN',
     },
+    id: {
+      type: 'Optional[String]',
+      desc: '',
+    },
+    cert_chain: {
+      type: 'Optional[String]',
+      desc: '',
+    },
+    creation_date: {
+      type: 'Optional[String]',
+      desc: '',
+    },
   },
 )
 # rubocop:enable Metrics/LineLength
